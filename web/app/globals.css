@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+:root {
+  /* --- Design tokens -------------------------------------------------
+     A premium, dark "auction house" aesthetic -- deep navy-charcoal
+     canvas, warm antique-gold accent, serif display type for lot titles.
+     Deliberately distinct from a typical light SaaS dashboard: this is
+     meant to feel like a curated evening auction, not a trading terminal.
+  ------------------------------------------------------------------- */
+  --canvas: #12131b;
+  --canvas-alt: #1a1c28;
+  --surface: #1c1e2b;
+  --surface-raised: #22243370;
+  --ink: #f3efe6;
+  --ink-soft: #b3b3c6;
+  --ink-faint: #74748c;
+  --line: #2c2e40;
+  --line-soft: #23253433;
+
+  --gold: #c9974b;
+  --gold-dark: #a87c39;
+  --gold-soft: #c9974b24;
+
+  --success: #4ade80;
+  --success-soft: #4ade8020;
+  --danger: #f87171;
+  --danger-soft: #f8717120;
+  --amber: #fbbf24;
+  --amber-soft: #fbbf2420;
+  --primary: #c9974b; /* gold doubles as the primary action color */
+  --primary-dark: #a87c39;
+  --primary-soft: #c9974b24;
+
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.2), 0 4px 20px rgba(0, 0, 0, 0.25);
+  --shadow-lifted: 0 12px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-canvas-alt: var(--canvas-alt);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-soft: var(--primary-soft);
+
+  --color-gold: var(--gold);
+  --color-gold-dark: var(--gold-dark);
+  --color-gold-soft: var(--gold-soft);
+
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-amber: var(--amber);
+  --color-amber-soft: var(--amber-soft);
+
+  --font-display: var(--font-playfair);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-plex-mono);
+}
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-display), Georgia, serif;
+}
+
+.font-mono-num {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.gradient-trust {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, #c9974b14, transparent),
+    var(--canvas);
+}
+
+.gradient-primary-btn {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+.animate-float-gentle {
+  animation: float-gentle 4s ease-in-out infinite;
+}
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 var(--gold-soft); }
+  70% { box-shadow: 0 0 0 8px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+.animate-pulse-ring {
+  animation: pulse-ring 2s ease-out infinite;
+}
+
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: 4px;
+}

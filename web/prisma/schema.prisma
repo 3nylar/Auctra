@@ -1,0 +1,83 @@
+// Prisma schema for Auctra's authentication layer.
+//
+// Defaults to Postgres. Unlike the companion Liquidity Pool Simulator
+// project, this schema does NOT default to SQLite for local dev -- SQLite
+// writes to a local file, and serverless hosts (Vercel and similar) give
+// each request an ephemeral, largely read-only filesystem, so a SQLite
+// file will not reliably persist between requests once deployed. That
+// mismatch is exactly the kind of bug that's easy to miss locally and only
+// surfaces in production. Use a real Postgres instance from the start --
+// free tiers on Neon, Vercel Postgres, or Supabase all take under 5
+// minutes to set up and work identically for local development too.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// --- Standard Auth.js (NextAuth) models -------------------------------
+// These match the shape the Prisma adapter expects. `walletAddress` is our
+// own addition, used by the SIWE (wallet) credentials provider.
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  walletAddress String?   @unique
+  createdAt     DateTime  @default(now())
+
+  accounts Account[]
+  sessions Session[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// --- SIWE nonce tracking ------------------------------------------------
+// Short-lived, single-use nonces issued before a wallet sign-in, to prevent
+// signature replay attacks.
+
+model SiweNonce {
+  nonce     String   @id
+  createdAt DateTime @default(now())
+  usedAt    DateTime?
+}

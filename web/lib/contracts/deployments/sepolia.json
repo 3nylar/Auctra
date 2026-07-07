@@ -1,0 +1,13 @@
+{
+  "network": "sepolia",
+  "chainId": "11155111",
+  "deployedAt": "2026-07-07T12:35:16.649Z",
+  "contracts": {
+    "auctionHouse": {
+      "address": "0x80E1281c359927905D10cae4840A471c42F4b5D2"
+    },
+    "mockCollectible": {
+      "address": "0x9Dd8e2148eF538F79098A4215B08ac2296675E03"
+    }
+  }
+}
